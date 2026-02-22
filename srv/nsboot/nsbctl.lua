@@ -29,21 +29,21 @@
 	--[[ TARGET COMMANDS sets opt1,opt2,opt3  ]]
 	--[[===========================================================================================================================================================================================]]
 	  	nsboot.cmd.tgt = 	{
-					new 		= function(opt,p_tid) 	return os.execute("/usr/sbin/tgtadm --lld iscsi --op new --mode target --tid "..p_tid.." -T "..opt); 									end, 					--CREATE TARGET
-					destroy		= function(opt) 		return os.execute("/usr/sbin/tgtadm --lld iscsi --op delete --mode target --tid "..opt); 												end, 					--REMOVE TARGET
-					kill		= function(opt) 		return os.execute("/usr/sbin/tgtadm --lld iscsi --op delete --force --mode target --tid "..opt); 										end, 					--FORCE REMOVE TARGET
-					show 		= function(opt) 		return os.execute("/usr/sbin/tgtadm --lld iscsi --op show --mode target "..opt); 														end, 					--INFO TARGETS
-					rules		= function(p_tid,opt)	return os.execute("/usr/sbin/tgtadm --lld iscsi --mode target --op bind --tid "..p_tid.." -I "..opt); 									end, 					--ALLOW CLIENT IP
-					unrul		= function(p_tid,opt)	return os.execute("/usr/sbin/tgtadm --lld iscsi --mode target --op unbind --tid "..p_tid.." -I "..opt); 								end,
+					new 		= function(opt,p_tid) 	return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op new --mode target --tid "..p_tid.." -T "..opt); 									end, 					--CREATE TARGET
+					destroy		= function(opt) 		return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op delete --mode target --tid "..opt); 												end, 					--REMOVE TARGET
+					kill		= function(opt) 		return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op delete --force --mode target --tid "..opt); 										end, 					--FORCE REMOVE TARGET
+					show 		= function(opt) 		return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op show --mode target "..opt); 														end, 					--INFO TARGETS
+					rules		= function(p_tid,opt)	return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --mode target --op bind --tid "..p_tid.." -I "..opt); 									end, 					--ALLOW CLIENT IP
+					unrul		= function(p_tid,opt)	return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --mode target --op unbind --tid "..p_tid.." -I "..opt); 								end,
 					used		= function(p_tgt) 		local fd; 																																---
-								  fd = io.popen("/usr/sbin/tgtadm --lld iscsi --op show --mode target | /usr/bin/grep --color \"Target [0-9]:\" | /usr/bin/grep "..p_tgt);						---
+								  fd = io.popen("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op show --mode target | /usr/bin/grep --color \"Target [0-9]:\" | /usr/bin/grep "..p_tgt);						---
 								  return (#fd:read("a*") > 0);																																	end
 					};																																											---
 		nsboot.cmd.lun = 	{																																									---
-							add		= function(p_tid,p_lun,p_dev) return os.execute("/usr/sbin/tgtadm --lld iscsi --op new --mode logicalunit --tid "..p_tid.." --lun "..p_lun.." -b "..p_dev); end,
-							del 	= function(p_tid,p_lun) return os.execute("/usr/sbin/tgtadm --lld iscsi --op delete --mode logicalunit --tid "..p_tid.." --lun "..p_lun);					end,
-							stop 	= function(p_opt) return os.execute("/usr/sbin/tgtadm --offline "..p_opt);																					end,
-							start 	= function(p_opt) return os.execute("/usr/sbin/tgtadm --ready "..p_opt);																					end
+							add		= function(p_tid,p_lun,p_dev) return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op new --mode logicalunit --tid "..p_tid.." --lun "..p_lun.." -b "..p_dev); end,
+							del 	= function(p_tid,p_lun) return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op delete --mode logicalunit --tid "..p_tid.." --lun "..p_lun);					end,
+							stop 	= function(p_opt) return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --offline "..p_opt);																					end,
+							start 	= function(p_opt) return os.execute("/usr/bin/sudo /usr/sbin/tgtadm --ready "..p_opt);																					end
 					};																																											---
 		nsboot.cmd.nbd = 	{																																									---
 							mod 	= function(p_max_part,p_nbds) return os.execute("/usr/sbin/modprobe nbd max_part "..p_max_part.." nbds "..p_nbds); 											end,
@@ -406,7 +406,7 @@
 		end;
 		function nsboot:checkstatpc(p_ip)
 			local fd,result 
-				fd = io.popen("/usr/sbin/tgtadm --lld iscsi --op show --mode target | /usr/bin/grep 'IP Address: "..p_ip.."'"); --/usr/sbin/tgtadm --lld iscsi --op show --mode target | grep --color "IP Address: 192.168.0.4"
+				fd = io.popen("/usr/bin/sudo /usr/sbin/tgtadm --lld iscsi --op show --mode target | /usr/bin/grep 'IP Address: "..p_ip.."'"); --/usr/sbin/tgtadm --lld iscsi --op show --mode target | grep --color "IP Address: 192.168.0.4"
 				return (#fd:read("a*") > 0);
 		end;
 	
