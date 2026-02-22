@@ -141,7 +141,7 @@
 				return result
 		end;
 		nsboot.inc.systemctl = function(p_name,p_cmd)
-						return os.execute("/usr/bin/systemctl "..p_cmd.." "..p_name)
+						return os.execute("/usr/bin/sudo /usr/bin/systemctl "..p_cmd.." "..p_name)
 		end;
 		nsboot.inc.monit = function()
 					if not nsboot.inc.lsof("-t -i:"..nsboot.cfg.dhcp.port) 	then nsboot.inc.systemctl("isc-dhcp-server","start"); nsboot.inc.systemctl("isc-dhcp-server","restart");	end;
